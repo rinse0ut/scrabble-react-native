@@ -1,6 +1,6 @@
 import React from "react";
 import {getLetters} from "../../api/letter";
-import {StyleSheet, Text, View, TouchableOpacity} from "react-native";
+import {StyleSheet, View, Image} from "react-native";
 import {colors, fonts, padding} from "../../styles/base";
 import Loader from '../Loader'
 import Letter from '../Letter'
@@ -38,11 +38,11 @@ export default class TabLetters extends React.Component {
   
     return (
       <View style={styles.container}>
-        {
-          letters.map(item =>  
+        {letters.map(item =>  
             <Letter 
               letter={item.letter} 
               score={item.score}
+              styles={letterStyles}
               handlePress={() => console.log(`${item.letter} was pressed.`)}
             />
         )}
@@ -58,22 +58,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  tile: {
-    width: 60,
-    height: 60,
-    backgroundColor: colors.secondary,
-    margin: padding.sm,
-    paddingLeft: 5,
-    borderRadius:5,
-    flexDirection: 'row',
-  },
-  letter: {
-    margin: padding.sm,
-    fontSize: fonts.lg,
-  },
-  score: {
-    //@todo
   },
   sectionHeader: {
     paddingTop: 2,
@@ -91,4 +75,24 @@ const styles = StyleSheet.create({
     color: colors.primary,
     height: padding.xl,
   },
+})
+
+const letterStyles = StyleSheet.create({
+  tile: {
+    width: 60,
+    height: 60,
+    backgroundColor: colors.secondary,
+    margin: padding.sm,
+    paddingLeft: 5,
+    borderRadius:5,
+    flexDirection: 'row',
+  },
+  letter: {
+    margin: padding.sm,
+    fontSize: fonts.lg,
+  },
+  score: {
+    fontSize: 11, 
+    lineHeight: 80  
+  }
 })

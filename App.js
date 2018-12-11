@@ -17,6 +17,9 @@ const AppNavigator = createStackNavigator({
   About: {screen: AboutScreen},
   Words: {screen: WordsScreen},
   Recall: {screen: RecallScreen},
+},
+{
+  initialRouteName: "Recall"
 });
 
 export default createAppContainer(AppNavigator)
