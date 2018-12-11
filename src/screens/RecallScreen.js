@@ -10,11 +10,25 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import Layout from "../components/Layout";
 import {colors} from "../styles/base";
+import {getWords} from "../api/word"
 
 type Props = {};
 export default class RecallScreen extends Component<Props> {
+
+  componentDidMount() {
+    getWords().then(words => this.setState({words}))
+      .catch(console.error)
+      .finally(this.setState({isLoading: false}))
+  }
+
+  getWordsStartingWith(letter) {
+    const {words} = this.state
+
+  }
+
   render() {
-    console.log('AboutScreen:props', this.props)
+    console.log('RecallScreen:props', this.props)
+    console.log('RecallScreen:state', this.state)
     return (
       <Layout>
         <View style={styles.container}>

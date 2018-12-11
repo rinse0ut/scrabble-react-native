@@ -7,9 +7,12 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Button, TabBarIOS, SectionList} from 'react-native';
-import Layout from "../components/Layout";
+import * as R from 'ramda';
+import {StyleSheet, Text, View, Button, TabBarIOS, SectionList, ActivityIndicator} from 'react-native';
 import {colors, padding, fonts} from "../styles/base";
+import Layout from "../components/Layout";
+import TabLetters from "../components/words/TabLetters";
+import TabWords from "../components/words/TabWords";
 
 type Props = {};
 export default class WordsScreen extends Component<Props> {
@@ -21,6 +24,10 @@ export default class WordsScreen extends Component<Props> {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    console.log('componentDidUpdate', prevProps, this.props)
+  }
+
   setTab(tabId) {
     this.setState({selectedTab: tabId});
   }
@@ -28,15 +35,19 @@ export default class WordsScreen extends Component<Props> {
   render() {
     console.log('WordScreen:props', this.props)
     console.log('WordScreen:screen', this.state)
+    const {navigation} = this.props;
     return (
       <Layout>
         <TabBarIOS>
           <TabBarIOS.Item
             systemIcon="bookmarks"
             selected={this.state.selectedTab === 'tabWordIndex'}
-            onPress={ () => this.setTab('tabWordIndex') }
+            onPress={() => this.setTab('tabWordIndex')}
           >
-            <TabLetters/>
+            <TabLetters 
+              navigation={navigation} 
+              foo='foo'
+            />
           </TabBarIOS.Item>
 
           <TabBarIOS.Item
@@ -60,118 +71,6 @@ export default class WordsScreen extends Component<Props> {
     );
   }
 }
-
-/**
- * Letter List Tab
- */
-class TabLetters extends React.Component {
-
-  render() {
-    return (
-      <View style={letterStyles.container}>
-        {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => (
-          <View style={letterStyles.tile}>
-            <Text style={letterStyles.letter}>{letter}</Text>
-            <Text style={{fontSize: 11, lineHeight: 80}}>1</Text>
-          </View>
-        ))}
-      </View>
-    );
-  }
-}
-
-const letterStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  tile: {
-    width: 60,
-    height: 60,
-    backgroundColor: colors.secondary,
-    margin: padding.sm,
-    paddingLeft: 5,
-    borderRadius:5,
-    flexDirection: 'row',
-    // borderWidth: 1,
-  },
-  letter: {
-    margin: padding.sm,
-    fontSize: fonts.lg,
-  },
-  score: {
-
-  },
-  sectionHeader: {
-    paddingTop: 2,
-    paddingLeft: padding.sm,
-    paddingRight: padding.sm,
-    paddingBottom: 2,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: colors.primary,
-    backgroundColor: colors.quaternary
-  },
-  item: {
-    padding: padding.sm,
-    fontSize: 18,
-    color: colors.primary,
-    height: padding.xl,
-  },
-})
-
-/**
- * Words Tab
- */
-class TabWords extends React.Component {
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <SectionList
-          sections={[
-            {title: 'A', data: ['Aaron']},
-            {title: 'B', data: ['Ben', 'Billy']},
-            {title: 'C', data: ['Charlie', 'Charlotte']},
-            {title: 'D', data: ['Devin']},
-            {title: 'E', data: ['Edward', 'Ernie', 'Elizabeth']},
-            {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
-          ]}
-          renderItem={({item}) => <Text style={WordStyles.item}>{item}</Text>}
-          renderSectionHeader={({section}) => <Text style={WordStyles.sectionHeader}>{section.title}</Text>}
-          keyExtractor={(item, index) => index}
-        />
-      </View>
-    );
-  }
-}
-
-const WordStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: padding.md
-  },
-  sectionHeader: {
-    paddingTop: 2,
-    paddingLeft: padding.sm,
-    paddingRight: padding.sm,
-    paddingBottom: 2,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: colors.primary,
-    backgroundColor: colors.quaternary
-  },
-  item: {
-    padding: padding.sm,
-    fontSize: 18,
-    color: colors.primary,
-    height: padding.xl,
-  },
-})
-
 
 /**
  * More Tab
@@ -199,21 +98,3 @@ const styles = StyleSheet.create({
   }
 });
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#F5FCFF',
-//   },
-//   title: {
-//     fontSize: fonts.lg,
-//     color: colors.primary,
-//     textAlign: 'center',
-//     margin: 10,
-//   },
-//   description: {
-//     fontSize: fonts.sm,
-//     color: colors.secondary,
-//   }
-// });
