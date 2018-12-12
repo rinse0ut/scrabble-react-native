@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import * as R from 'ramda';
-import {StyleSheet, Text, TextInput, View, Image} from 'react-native';
+import {StyleSheet, Text, TextInput, View, Image, Alert} from 'react-native';
 import Layout from "../components/Layout";
 import {colors, padding, fonts} from "../styles/base";
 import {getWords} from "../api/word"
@@ -26,10 +26,14 @@ export default class RecallScreen extends Component<Props> {
     letters: [],
     words: [],
     correctLetters: [],
-    wrongLetters: []
+    wrongLetters: [],
+    isDisabled: false,
   }
 
   componentDidMount() {
+    const startingLetter = this.props.navigation.getParam('startingLetter', 'A')
+    this.setState({startingLetter})
+
     getLetters().then(letters => {
       this.setState({letters})
       return getWords()
@@ -50,25 +54,49 @@ export default class RecallScreen extends Component<Props> {
     return R.contains(word, recallWords)
   }
 
-  handleSelectedLetter = (item) => {
+  isComplete() {
+    const {correctLetters} = this.state
+    const recallWords = this.getWordsForRecall()
+    return correctLetters.length === recallWords.length
+  }
+
+  handleLetterPress = (item) => {
     console.log(`${item.letter} was pressed.`)
-    const {startingLetter, correctLetters, wrongLetters} = this.state
+    const {startingLetter, correctLetters, wrongLetters, isDisabled} = this.state
     const selectedWord = `${startingLetter}${item.letter}`
+
+    if (isDisabled) return
+
     if (this.isCorrect(selectedWord)) {
-      this.setState({correctLetters: R.append(item.letter, correctLetters)})
+      this.setState(
+        {correctLetters: R.append(item.letter, correctLetters)},
+        () => this.isComplete() && this.handleComplete()
+      )
     } else {
       this.setState({wrongLetters: R.append(item.letter, wrongLetters)})
     }
+    if (this.isComplete()) {
+    } 
   }
 
+  handleComplete() {
+    Alert.alert(
+      'Well Done!',
+      'You have acheived total recall!'
+    )
+    this.setState({isDisabled: true})
+  }
+  
   render() {
     console.log('RecallScreen:props', this.props)
     console.log('RecallScreen:state', this.state)
-    const {isLoading, letters, correctLetters, wrongLetters} = this.state
+    const {isLoading, startingLetter, letters, correctLetters, wrongLetters} = this.state
 
-    if (isLoading) return (
-      <Loader/>
-    )
+    if (isLoading) {
+      return (
+        <Loader/>
+      )
+    }
 
     const Check = <Image
       style={styles.check}
@@ -79,8 +107,18 @@ export default class RecallScreen extends Component<Props> {
       <Layout>
         <View style={styles.container}>
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-            <Letter letter="A" score="1" styles={letterStyles}/>
-            <Letter letter="?" score="" styles={letterStyles}/>
+            <Letter 
+              letter={startingLetter} 
+              score="1" 
+              styles={letterStyles}
+              handlePress={() => null}
+            />
+            <Letter 
+              letter="?" 
+              score="" 
+              styles={letterStyles}
+              handlePress={() => null}
+            />
           </View>
         </View>
         <View style={styles.wrapper}>
@@ -92,7 +130,7 @@ export default class RecallScreen extends Component<Props> {
                   status={R.contains(item.letter, correctLetters) ? 'CORRECT': R.contains(item.letter, wrongLetters) && 'WRONG'}
                   statusIcon={R.contains(item.letter, correctLetters) ? Check : null}
                   styles={letterStyles}
-                  handlePress={() => this.handleSelectedLetter(item)}
+                  handlePress={() => this.handleLetterPress(item)}
                 />
               </View>
           )}

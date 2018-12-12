@@ -9,7 +9,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
 import Layout from "../components/Layout";
-import {colors} from "../styles/base";
+import {colors, fonts, padding} from "../styles/base";
 
 type Props = {};
 export default class AboutScreen extends Component<Props> {
@@ -18,7 +18,9 @@ export default class AboutScreen extends Component<Props> {
     return (
       <Layout>
         <Text style={styles.title}>About</Text>
-        <Text style={styles.description}>This is a react native app for learning two letter scrabble words.</Text>
+        <Text style={styles.description}>This is a React Native App for learning two letter words.</Text>
+        <Text style={styles.description}>Knowing these words can help you gain an extra 50 points playing
+        board games such as Scrabble or Words With Friends.</Text>
       </Layout>
     );
   }
@@ -38,7 +40,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   description: {
-    fontSize: fonts.sm,
+    fontSize: fonts.md,
     color: colors.secondary,
+    padding: padding.sm
   }
 });

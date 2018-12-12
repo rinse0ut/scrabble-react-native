@@ -4,6 +4,6 @@ export const getLetters = () => {
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
       resolve(letters);
-    }, 300);
+    }, 0);
   });
 }

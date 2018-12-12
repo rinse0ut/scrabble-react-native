@@ -7,7 +7,6 @@
  */
 
 import React, {Component} from 'react';
-import * as R from 'ramda';
 import {StyleSheet, Text, View, Button, TabBarIOS, SectionList, ActivityIndicator} from 'react-native';
 import {colors, padding, fonts} from "../styles/base";
 import Layout from "../components/Layout";
@@ -25,7 +24,17 @@ export default class WordsScreen extends Component<Props> {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate', prevProps, this.props)
+    console.log('WordsScreen:componentDidUpdate', prevProps, this.props)
+    const {navigation} = this.props
+    const {navigation:prevNavigation} = prevProps
+    const letter = navigation.getParam('letter')
+    const prevLetter = prevNavigation.getParam('letter')
+    if (letter !== prevLetter) {
+      const selectedTab = navigation.getParam('selectedTab')
+      this.setTab(selectedTab)
+    } else {
+      return false
+    }
   }
 
   setTab(tabId) {
@@ -36,26 +45,30 @@ export default class WordsScreen extends Component<Props> {
     console.log('WordScreen:props', this.props)
     console.log('WordScreen:screen', this.state)
     const {navigation} = this.props;
+    console.log('WordScreen:navgation', navigation.getParam('letter'), navigation.getParam('selectedTab'))
     return (
       <Layout>
         <TabBarIOS>
           <TabBarIOS.Item
+            title="Index"
             systemIcon="bookmarks"
             selected={this.state.selectedTab === 'tabWordIndex'}
             onPress={() => this.setTab('tabWordIndex')}
           >
             <TabLetters 
               navigation={navigation} 
-              foo='foo'
             />
           </TabBarIOS.Item>
 
           <TabBarIOS.Item
+            title="Words"
             systemIcon="most-viewed"
             selected={this.state.selectedTab === 'tabWordList'}
             onPress={() => this.setTab('tabWordList')}
           >
-            <TabWords/>
+            <TabWords
+              navigation={navigation}            
+            />
           </TabBarIOS.Item>
 
           <TabBarIOS.Item
@@ -73,7 +86,7 @@ export default class WordsScreen extends Component<Props> {
 }
 
 /**
- * More Tab
+ * Favourites Tab
  */
 class TabFavorites extends React.Component {
 
@@ -81,6 +94,7 @@ class TabFavorites extends React.Component {
     return (
       <View style={styles.tabContent}>
         <Text style={styles.tabText}>Favorites</Text>
+        <Text style={styles.description}>Coming Soon!</Text>
       </View>
     );
   }
@@ -94,7 +108,12 @@ const styles = StyleSheet.create({
   tabText: {
     margin: 50,
     fontSize: 40,
-    color: 'white'
-  }
+    color: colors.primary
+  },
+  description: {
+    fontSize: fonts.md,
+    color: colors.secondary,
+    padding: padding.sm
+  }  
 });
 

@@ -1,7 +1,7 @@
 /* @flow */
 import React, {Component} from 'react'
 import {StyleSheet, Text, View} from 'react-native';
-import {colors, dimensions} from '../styles/base'
+import {colors, dimensions, fonts} from '../styles/base'
 
 type Props = {}
 class TopBar extends Component<Props> {
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     width: dimensions.fullWidth,
     color: colors.primary,
     textAlign: 'center',
+    fontSize: fonts.md,
   }
 })
 

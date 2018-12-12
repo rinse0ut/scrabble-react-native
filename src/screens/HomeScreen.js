@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
-import {colors} from "../styles/base";
+import {colors, fonts} from "../styles/base";
 import Layout from '../components/Layout';
 
 type Props = {};
@@ -37,7 +37,7 @@ export default class HomeScreen extends Component<Props> {
           <Button
             title="Recall"
             color={colors.primary}
-            onPress={() => navigate('Recall')}
+            onPress={() => navigate('RecallIndex')}
           ></Button>
         </View>
       </Layout>

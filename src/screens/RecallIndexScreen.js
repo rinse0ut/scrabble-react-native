@@ -1,14 +1,15 @@
 import React from "react";
-import {getLetters} from "../../api/letter";
+import {getLetters} from "../api/letter";
 import {StyleSheet, View, Text} from "react-native";
-import {colors, fonts, padding} from "../../styles/base";
-import Loader from '../Loader'
-import Letter from '../Letter'
+import {colors, fonts, padding} from "../styles/base";
+import Layout from "../components/Layout";
+import Loader from '../components/Loader'
+import Letter from '../components/Letter'
 
 /**
- * Letter List Tab
+ * Recall Index Screen
  */
-export default class TabLetters extends React.Component {
+export default class RecallIndexScreen extends React.Component {
 
   state = {
     isLoading: true,
@@ -24,29 +25,29 @@ export default class TabLetters extends React.Component {
 
   handleLetterPress = (item) => {
     const {navigate} = this.props.navigation;
-    navigate('Words', {letter: item.letter, selectedTab: 'tabWordList'})
-    console.log('TabLetters:handleLetterPRess', item.letter)
+    navigate('Recall', {startingLetter: item.letter})
+    console.log('TabLetters:handleLetterPRess', navigate)
   }
 
   render() {
     const {isLoading, letters} = this.state
     console.log('TabLetters:props', this.props)
+    const {navigate} = this.props.navigation;
 
     if (isLoading) return (
       <Loader/>
     )
   
     return (
-      <View>
+      <Layout>
         <View style={styles.container}>
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-            <Text style={styles.title}>Word Index</Text>
+            <Text style={styles.title}>Recall words starting with...</Text>
           </View>
         </View>
         <View style={styles.wrapper}>
         {letters.map(item =>  
             <Letter 
-              key={item.letter} 
               letter={item.letter} 
               score={item.score}
               styles={letterStyles}
@@ -54,7 +55,7 @@ export default class TabLetters extends React.Component {
             />
         )}
         </View>    
-      </View>
+      </Layout>
     );
   }
 }

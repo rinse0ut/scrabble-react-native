@@ -1,7 +1,9 @@
 import React from "react";
+import * as R from 'ramda';
 import {SectionList, StyleSheet, Text, View} from "react-native";
 import {colors, padding, fonts} from "../../styles/base"
 import {getWords} from "../.././api/word"
+import {getLetters} from "../.././api/letter"
 import Loader from '../Loader'
 
 /**
@@ -11,19 +13,30 @@ export default class TabWords extends React.Component {
 
   state = {
     isLoading: true,
+    sectionIndex: 0,
+    letters: [],
     words: []
   }
 
   componentDidMount() {
-    getWords() .then(words => this.setState({words}))
-      .catch(console.error)
-      .finally(this.setState({isLoading: false}))
+    console.log('TabWords:componentDidMount:navgation:letter', this.props.navigation.getParam('letter'))    
+    getLetters().then(letters => {
+      this.setState({letters})
+      return getWords()
+    })
+    .then(words => this.setState({words}))
+    .catch(console.error)
+    .finally(this.setState({isLoading: false}))
   }
 
   componentDidUpdate() {
-    const {words} = this.state
+    const {letters, words} = this.state
+    const {navigation} = this.props
+    const letter = navigation.getParam('letter')
+    console.log('TabWords:componentDidUpdate:navgation:letter', this.props.navigation.getParam('letter'))    
+    const sectionIndex = R.findIndex(R.propEq('letter', letter), letters)
     if (words.length) {
-      // setTimeout(() => this.scrollToSection(), 500)
+      setTimeout(() => this.scrollToSection(sectionIndex - 1), 1500)
     }
   }
 
@@ -54,10 +67,10 @@ export default class TabWords extends React.Component {
     return sections
   }
 
-  scrollToSection = () => {
+  scrollToSection = (sectionIndex) => {
     this.sectionListRef.scrollToLocation({
       animated: true,
-      sectionIndex: 6,
+      sectionIndex,
       itemIndex: 0,
       viewPosition: 0
     });
@@ -76,6 +89,9 @@ export default class TabWords extends React.Component {
 
     return (
       <View style={styles.container}>
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+          <Text style={styles.title}>Word List</Text>
+        </View>
         <SectionList
           sections={sections}
           ref={ref => (this.sectionListRef = ref)}
@@ -91,7 +107,6 @@ export default class TabWords extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: padding.md
   },
   sectionHeader: {
     paddingTop: 2,
@@ -105,7 +120,7 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: padding.sm,
-    fontSize: 18,
+    fontSize: fonts.md,
     color: colors.primary,
     height: padding.xl,
   },

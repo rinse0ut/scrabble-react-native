@@ -10,12 +10,13 @@ export default class Letter extends PureComponent {
   render() {
     const {letter, score, status, statusIcon, styles, handlePress} = this.props
     let backgroundColor;
-    console.log('STATUS', status)
+
     if (status === 'CORRECT') {
       backgroundColor = 'green' 
     } else if (status === 'WRONG') {
       backgroundColor = 'red' 
     }
+    
     return (
       <TouchableOpacity 
         key={letter} 

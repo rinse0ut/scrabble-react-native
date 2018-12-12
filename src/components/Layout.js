@@ -21,14 +21,14 @@ class Layout extends Component<Props> {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: padding.lg,
+    paddingBottom: 70,
     width: dimensions.fullWidth,
     height: dimensions.fullHeight,
     backgroundColor: colors.tertiary,
   },
   wrapper: {
     flex: 1,
-    paddingVertical: padding.sm,
+    // paddingVertical: padding.sm,
   }
 })
 
